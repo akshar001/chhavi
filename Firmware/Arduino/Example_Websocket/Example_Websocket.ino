@@ -7,8 +7,8 @@ WiFiMulti wifiMulti;
 #include <AsyncTCP.h>
 #include <ESPAsyncWebServer.h>
 // Replace with your network credentials
-const char* ssid = "VEGG_5";
-const char* password = "sss3kk2aaaa4";
+const char* ssid = "MY_SSID";
+const char* password = "MY_PASSWRD";
 bool ledState = 0;
 const int ledPin = 2;
 // Create AsyncWebServer object on port 80
