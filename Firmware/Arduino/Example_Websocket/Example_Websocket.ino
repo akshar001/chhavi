@@ -470,7 +470,7 @@ void setup() {
     digitalWrite(LED_2, !digitalRead(LED_2));
   });
 
-  wifiMulti.addAP("VEGG_5", "sss3kk2aaaa4");
+  wifiMulti.addAP(ssid, password);
   while(wifiMulti.run() != WL_CONNECTED) {
         Serial.println("WiFi not connected!");
         delay(1000);
@@ -487,8 +487,8 @@ void setup() {
 
   // Start server
   server.begin();
-  
-  
+
+
 }
 
 void loop() {
