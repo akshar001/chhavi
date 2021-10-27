@@ -54,6 +54,7 @@ static const int spiClk = 10000000;
 
 SimpleTimer timer;
 
+void parse_command(String read_string);
 
 const char index_html[] PROGMEM = R"rawliteral(
 <!DOCTYPE HTML><html>
