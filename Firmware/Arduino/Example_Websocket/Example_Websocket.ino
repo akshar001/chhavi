@@ -1,14 +1,18 @@
-
+ 
 #include "Arduino.h"
 #include <WiFi.h>
 #include <WiFiMulti.h>
-
+#include "Ticker.h"
+#include <Wire.h>
 WiFiMulti wifiMulti;
 #include <AsyncTCP.h>
 #include <ESPAsyncWebServer.h>
+#include <Wire.h>               // Only needed for Arduino 1.6.5 and earlier
+#include "SSD1306Wire.h"        // legacy: #include "SSD1306.h"
+#include "images.h"
 // Replace with your network credentials
-const char* ssid = "MY_SSID";
-const char* password = "MY_PASSWRD";
+const char* ssid = "SSID";
+const char* password = "PWD";
 bool ledState = 0;
 const int ledPin = 2;
 // Create AsyncWebServer object on port 80
@@ -28,14 +32,16 @@ extern "C" {
 #include "bep_host_if.h"
 #include "com_common.h"
 #include "platform.h"
-#include "fpc_bep_types.h"
+#include "fpc_bep_types.h" 
 #include "fpc_hcp_common.h"
 #include "fpc_com_result.h"
 #include "fpc_hcp.h"
 #include "platform.h"
 #include "com_common.h"
 #include "bep_host_if.h"
+
 }
+#include "AsyncUDP.h"
 #include <SPI.h>
 
 #define SCK_PIN   14
@@ -43,17 +49,49 @@ extern "C" {
 #define MOSI_PIN  13
 #define SS_PIN    15
 
+#define VIBRATE 33
 
-#define LED_1 18
-#define LED_2 5
+
+#define LED_1 26
+#define LED_2 27
 SPIClass SPI_T(HSPI);
 
+// Display code 
+
+SSD1306Wire display(0x3c, SDA, SCL); 
+
+#define DEMO_DURATION 3000
+typedef void (*Demo)(void);
+
+int demoMode = 0;
+int counter = 1;
+// Displace code
 int template_counter = 1;
 
 static const int spiClk = 10000000;
 
 SimpleTimer timer;
 
+Ticker touchDetect;
+Ticker touchStop;
+
+
+// WiFi udp prototypes
+
+void startudp();
+void sendlock();
+
+AsyncUDP udp;
+void stop_timer() {
+  touchDetect.detach();
+  digitalWrite(LED_1, HIGH);
+  digitalWrite(LED_2, HIGH);
+}
+
+void blink_touch() {
+  digitalWrite(LED_1, !digitalRead(LED_1));
+  digitalWrite(LED_2, !digitalRead(LED_2));
+}
 
 const char index_html[] PROGMEM = R"rawliteral(
 <!DOCTYPE HTML><html>
@@ -295,7 +333,7 @@ void recv_function(uint16_t size, uint8_t *data_d, uint32_t timeout, void *sessi
   bool is_timeout = true;
 
   while (1) {
-    if (digitalRead(33) == 1) break;
+    if (digitalRead(2) == 1) break;
   }
   SpiReadBurstReg(data_d, size);
 }
@@ -438,16 +476,22 @@ void setup() {
   pinMode(LED_1, OUTPUT);
   pinMode(LED_2, OUTPUT);
 
+  pinMode(VIBRATE, OUTPUT);
+
   pinMode(25, OUTPUT);
-  pinMode(33, INPUT_PULLUP);
+  pinMode(2, INPUT_PULLUP);
   digitalWrite(25, HIGH);
   delay(10);
   digitalWrite(25, LOW);
   delay(10);
 
   Serial.begin(115200);
+  digitalWrite(LED_1, HIGH);
+  digitalWrite(LED_2, HIGH);
   SpiInit();
   delay(100);
+
+  digitalWrite(VIBRATE, LOW);
 
   index_t = 1;
 
@@ -466,10 +510,11 @@ void setup() {
   assign_callback_forws((void*)send_ws_message);
   init_com_chain(&hcp_chain, buffer, size, NULL);
   timer.setInterval(1000, []() {
-    digitalWrite(LED_1, !digitalRead(LED_1));
-    digitalWrite(LED_2, !digitalRead(LED_2));
+//    digitalWrite(LED_1, !digitalRead(LED_1));
+//    digitalWrite(LED_2, !digitalRead(LED_2));
   });
 
+  WiFi.softAP("Chhavi_VEGG","touchDetect");
   wifiMulti.addAP("VEGG_5", "sss3kk2aaaa4");
   while(wifiMulti.run() != WL_CONNECTED) {
         Serial.println("WiFi not connected!");
@@ -487,12 +532,21 @@ void setup() {
 
   // Start server
   server.begin();
+  touchDetect.attach(1, blink_touch);
+
+  // Display 
+  display.init();
+
+  display.flipScreenVertically();
+//  display.setFont(ArialMT_Plain_10);
   
-  
+  showText("Chhavi",30,20);
+//  testdrawchar();
 }
 
 void loop() {
   ws.cleanupClients();
+  timer.run();
   digitalWrite(ledPin, ledState);
   if(is_new_message){
 //    Serial.println(final_message);
@@ -645,11 +699,41 @@ void parse_command(String read_string){
          if (match) {
             char ch[100];
             sprintf(ch, "Match with template id: %d\n", template_id);
+            String display_text = "Approved! \n Employee ID:: "+String(template_id);
+            showText(display_text,0,0);
+            timer.setTimeout(3000, [](){
+              showText("Welcome!\n ",30,20);
+              
+            });
+            
+             if(template_id < 2){
+                sendlock();
+                digitalWrite(VIBRATE, HIGH);
+                timer.setTimeout(50,[](){
+                  digitalWrite(VIBRATE, LOW);
+                });
+             }
              ws.textAll(String(ch));
           } else {
-             ws.textAll("No match\n");
+           String display_text = "Try Again!";
+           showText(display_text,30,20);
+            timer.setTimeout(2000, [](){
+              showText("Welcome!",30,20);
+           });
+            digitalWrite(VIBRATE, HIGH);
+             timer.setTimeout(50,[](){
+              digitalWrite(VIBRATE, LOW);
+              timer.setTimeout(400,[](){
+                  digitalWrite(VIBRATE, HIGH);
+                  timer.setTimeout(50,[](){
+                      digitalWrite(VIBRATE, LOW);
+                  });    
+              });
+            });
+            ws.textAll("No match\n");
           }
       }
+    
       break;
     case 'c':
       res = bep_delete_template(&hcp_chain, REMOVE_ID_ALL_TEMPLATES);
@@ -681,13 +765,20 @@ void parse_command(String read_string){
         uint16_t timeout;
         uint16_t sleep_counter;
         WRITE("Timeout: ");
-        timeout = 60000;
+        timeout = 10000;
         WRITE("Sleep polling interval (4-1020 ms): ");
         sleep_counter = 30;
         ws.textAll("Waiting for finger to detect!");
         res = bep_sensor_wait_for_finger(&hcp_chain, timeout, sleep_counter);
         flush_serial();
-        ws.textAll("Finger Detected!");
+        if(res == FPC_BEP_RESULT_OK){
+          touchDetect.attach(1, blink_touch);
+          touchStop.once(10, stop_timer);
+          ws.textAll("Finger Detected!");
+//          sendlock();
+        }else{
+          Serial.println("Timeout!");
+        }
         break;
       }
     case 'q':
