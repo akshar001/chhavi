@@ -1,0 +1,35 @@
+#######################################
+# Syntax Coloring Map For ElectronicCats PN7150
+#######################################
+# # Class (KEYWORD1)
+#######################################
+
+Electroniccats_PN7150   KEYWORD1
+
+#######################################
+# Methods and Functions (KEYWORD2)
+#######################################
+
+GetFwVersion    KEYWORD2
+begin   KEYWORD2
+writeData   KEYWORD2
+readData    KEYWORD2
+hasMessage  KEYWORD2
+ConfigMode  KEYWORD2
+StartDiscovery  KEYWORD2
+connectNCI  KEYWORD2
+wakeupNCI   KEYWORD2
+CardModeSend    KEYWORD2
+CardModeReceive KEYWORD2
+WaitForDiscoveryNotification    KEYWORD2
+FillInterfaceInfo   KEYWORD2
+ReaderTagCmd    KEYWORD2
+StopDiscovery   KEYWORD2
+ProcessReaderMode   KEYWORD2
+PresenceCheck   KEYWORD2
+ReaderReActivate    KEYWORD2
+PrintBuf    KEYWORD2
+ReaderActivateNext  KEYWORD2
+
+#######################################
+
