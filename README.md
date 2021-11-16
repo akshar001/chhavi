@@ -11,3 +11,8 @@ Fingerprint sensors can communicate with it and show you a live data in browser.
 For hardware resources, we will put the files after our crowd-supply campaign starts.
 
 For the firmware you can go through it now.
+
+
+Discord server!
+
+https://discord.gg/BWkbF5Sg
