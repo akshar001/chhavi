@@ -14,9 +14,9 @@ For the firmware you can go through it now.
 
 You'll need these libraries to start with ardunino, 
 
-https://github.com/sstaub/Ticker
-https://github.com/me-no-dev/ESPAsyncWebServer
-https://github.com/me-no-dev/AsyncTCP
+https://github.com/sstaub/Ticker<br>
+https://github.com/me-no-dev/ESPAsyncWebServer<br>
+https://github.com/me-no-dev/AsyncTCP<br>
 https://github.com/adafruit/Adafruit_SSD1306 ( And all depedent libraries of this library ).
 
 Use ExampleWebsocket.ino as your start project ,
