@@ -46,15 +46,22 @@ Install libraries via Arduino Library Manager:
 2. Go to **Sketch > Include Library > Manage Libraries**.
 3. Search for each library and click **Install**.
 
-### Uploading the Example Sketch
+### Running the Example Project
 
-To start quickly, we've provided an example sketch hosting an HTTP server and WebSocket server. This enables fingerprint sensors to communicate with Chhavi and display live data in a web browser.
+To begin exploring the capabilities of your Chhavi device, we've provided an example project located in the `Firmware -> Arduino -> Example_Websocket` folder. This example project hosts an HTTP server and WebSocket server, allowing fingerprint sensors to communicate with the device and display live data in a web browser.
+
+Follow these steps to run the example project:
 
 1. Open Arduino IDE.
-2. Go to **File > Open** and navigate to Chhavi's repository.
-3. Inside the repository, go to **Examples** > **ExampleWebsocket.ino**.
-4. Select the correct board and port in Arduino IDE: **Tools > Board** and choose the ESP32 option.
-5. Click **Upload** to compile and upload the sketch to Chhavi.
+2. Go to **File > Open** and navigate to the Chhavi repository.
+3. Inside the repository, navigate to `Firmware -> Arduino -> Example_Websocket` and open the `Example_Websocket.ino` file.
+4. In the Arduino IDE, ensure you have selected the correct board. Go to **Tools > Board** and choose the **ESP32 WROOM** module option.
+5. Update the WiFi credentials to match your network. Look for the following line in the code (usually around line 14):
+
+   ```cpp
+   const char* ssid = "your_wifi_ssid";
+   const char* password = "your_wifi_password";
+
 
 ## 4. Serial Communication
 
@@ -73,18 +80,13 @@ To communicate with Chhavi via serial:
 
 ## 6. Contact and Support
 
-For questions, issues, or sharing your Chhavi projects, contact us at [support@chhavi.io](mailto:support@chhavi.io).
+For questions, issues, or sharing your Chhavi projects, contact us at [contact@vicharak.in](mailto:contact@vicharak.in).
 
 Thank you for joining us on this exciting Chhavi journey!
 
 Remember, Chhavi is not just a device; it's a key to unlock endless possibilities.
 
 Happy tinkering!
-
-
-
-
-
 
 Change your WIFI SSID and Password and you are good to go.
 
