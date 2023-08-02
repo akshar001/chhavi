@@ -88,12 +88,6 @@ Remember, Chhavi is not just a device; it's a key to unlock endless possibilitie
 
 Happy tinkering!
 
-Change your WIFI SSID and Password and you are good to go.
-
-
-
-
-
 Discord server!
 
 https://discord.gg/BWkbF5Sg
