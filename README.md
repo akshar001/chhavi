@@ -50,6 +50,8 @@ Install libraries via Arduino Library Manager:
 
 To begin exploring the capabilities of your Chhavi device, we've provided an example project located in the `Firmware -> Arduino -> Example_Websocket` folder. This example project hosts an HTTP server and WebSocket server, allowing fingerprint sensors to communicate with the device and display live data in a web browser.
 
+### Device must need to power up before you see a serial port in computer, there is a side-button near the type-c port which needs to be pressed 4-5 seconds after you plug in the type-c cable in order to see a serial port in device.
+
 Follow these steps to run the example project:
 
 1. Open Arduino IDE.
