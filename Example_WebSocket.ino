@@ -627,6 +627,7 @@ void setup() {
   init_com_chain(&hcp_chain, buffer, size, NULL);
   WiFi.softAP("Chhavi_VEGG","touchDetect");
   wifiMulti.addAP("OnePlus 10 Pro 5G", "JerryTom");
+  wifiMulti.addAP(ssid, password);
   while(wifiMulti.run() != WL_CONNECTED) {
         Serial.println("WiFi not connected!");
         delay(1000);
