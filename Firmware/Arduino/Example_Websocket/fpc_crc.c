@@ -85,4 +85,3 @@ uint32_t fpc_crc(uint32_t crc, const void *buf, uint32_t size)
     }
     return crc ^ ~0U;
 }
-
