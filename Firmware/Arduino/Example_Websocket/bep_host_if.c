@@ -289,7 +289,7 @@ fpc_bep_result_t bep_enroll_finger(fpc_com_chain_t *chain)
 
         log_info("Capture done 1. Remove finger from sensor\n");
         new_ws_callback("Capture done 1. Remove finger from sensor\n");
-
+            
         if (bep_result != FPC_BEP_RESULT_OK) {
             log_error("%s:%u, ERROR receiving, result=%d\n", __func__, __LINE__, bep_result);
             new_ws_callback("ERROR receiving, result\n");
@@ -321,6 +321,10 @@ fpc_bep_result_t bep_enroll_finger(fpc_com_chain_t *chain)
         new_ws_callback(ch);
 
         if (samples_remaining == 0U) {
+            log_info("Fingerprint Added Succesfully \n");
+            char ch[100];
+            sprintf(ch, "Fingerprint Added Succesfully Now Save Template \n");
+            new_ws_callback(ch);
             enroll_done = true;
             break;
         }

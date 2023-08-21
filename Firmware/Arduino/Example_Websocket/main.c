@@ -174,6 +174,9 @@ int main (int argc, char **argv)
             case 'a':
                 res = bep_enroll_finger(&hcp_chain);
                 break;
+            case 'A':
+                res = bep_enroll_finger(&hcp_chain);
+                break;
             case 'b':
                 res = bep_identify_finger(&hcp_chain, &template_id, &match);
                 if (res == FPC_BEP_RESULT_OK) {
